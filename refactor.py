@@ -1,15 +1,15 @@
 
 import openpyxl as xl
 
-z = xl.
 
 
-def format_cell_value(cell: xl.cell.cell.Cell, nuli: str):
+
+def format_cell_value(cell_value: int | float, nuli: str) -> str:
     #Добавляет nuli, если cell целое число
-    if type(cell.value) == int:                      
-        return f'{cell.value},{nuli}'
+    if isinstance(cell_value, int):                      
+        return f'{cell_value},{nuli}'
     else:
-        return str(cell.value).replace('.', ',')
+        return str(cell_value).replace('.', ',')
     
 
 def dob_n(number: int | float) -> str:
