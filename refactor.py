@@ -1,7 +1,4 @@
-
 import openpyxl as xl
-
-
 
 
 def format_int_value(cell_value: int | float, nuli: str) -> str:
@@ -9,7 +6,7 @@ def format_int_value(cell_value: int | float, nuli: str) -> str:
     if isinstance(cell_value, int):                      
         return f'{cell_value},{nuli}'
     else:
-        return str(cell_value).replace('.', ',')
+        return str(round(cell_value, 3)).replace('.', ',')
     
 
 def format_float_value(number: int | float, decimal_places: int) -> str:
@@ -26,13 +23,22 @@ def format_float_value(number: int | float, decimal_places: int) -> str:
 # print(type(workbook['ИД']['A1']))
 
 def test_format_int_value():
-    pass
+    assert format_int_value(1, '00') == '1,00'
+    assert format_int_value(1.256, '00') == '1,256'
+    assert format_int_value(1, '0') == '1,0'
+    assert format_int_value(1.25678532, '00') == '1,257'
 
 
 def test_dob_n():
-    assert dob_n(1) == '1,000'
-    assert dob_n(1.2) == '1,200'
-    assert dob_n(1.25) == '1,250'
-    assert dob_n(1.256) == '1,256'
+    assert format_float_value(1, 3) == '1,000'
+    assert format_float_value(1.2, 3) == '1,200'
+    assert format_float_value(1.25, 3) == '1,250'
+    assert format_float_value(1.256, 3) == '1,256'
+    assert format_float_value(1, 2) == '1,00'
+    assert format_float_value(1.2, 2) == '1,20'
+    assert format_float_value(1.25, 2) == '1,25'
+    assert format_float_value(1.256, 2) == '1,26'
 
+
+test_format_int_value()
 test_dob_n()
