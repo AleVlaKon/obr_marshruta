@@ -1,5 +1,7 @@
 import pytest
 import openpyxl as xl
+from openpyxl.worksheet.worksheet import Worksheet
+from openpyxl.cell.cell import Cell
 from osnov_vid_def import vivodi_v_otchet
 
 
@@ -20,7 +22,7 @@ def format_float_value(number: int | float, decimal_places: int) -> str:
     return f"{number:,.{decimal_places}f}".replace('.', ',')
         
 
-def return_base_context(sheet):
+def return_base_context(sheet: Worksheet) -> dict:
         context = {
         'number': sheet['B1'].value,
         'name': sheet['C1'].value,
@@ -35,6 +37,7 @@ def return_base_context(sheet):
 
 workbook = xl.load_workbook('Ведомость тест.xlsx', data_only=True)
 sheet_names = [i for i in workbook.sheetnames if i not in ['Лист1', 'ИД', 'В обсл', 'аб1']]
-sheet_1 = workbook['У 1']
+sheet_1: Worksheet = workbook['У 1']
+print(type(sheet_1['B5']))
 
 print(return_base_context(sheet_1))
