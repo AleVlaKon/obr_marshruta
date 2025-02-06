@@ -252,9 +252,9 @@ def Gruntovaya(sheet, sheetname):
     shirina = dob_nuley(sheet['B6'], '0')
     #Declare template variables
     context = {
-        'number': sheet['B1'].value,
-        'name': sheet['C1'].value,
-        'opisanie': sheet['AM6'].value,
+        'number': sheet['B1'].value,   #+
+        'name': sheet['C1'].value,   #+
+        'opisanie': sheet['AM6'].value,   #+
         'shirina': shirina,
         'protyazhennost': str(sheet['B4'].value).replace('.', ','),
         'konstr_do': konstr_do

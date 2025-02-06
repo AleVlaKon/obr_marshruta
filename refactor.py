@@ -12,6 +12,11 @@ def format_int_value(cell_value: int | float, nuli: str) -> str:
     else:
         return str(round(cell_value, 3)).replace('.', ',')
     
+def format_shirina(cell_value: int | float | str) -> str:
+     if isinstance(cell_value, str):
+          return cell_value.replace('.', ',')
+     return format_int_value(cell_value, '0')
+
 
 def format_float_value(number: int | float, decimal_places: int) -> str:
     '''
@@ -20,6 +25,13 @@ def format_float_value(number: int | float, decimal_places: int) -> str:
     чтобы было 0,000 формат км
     '''
     return f"{number:,.{decimal_places}f}".replace('.', ',')
+
+
+def format_km_with_plus_values(start_km: int | float, end_km: int | float) -> str:
+     format_start_km = format_float_value(start_km, 3).replace(',', '+')
+     format_end_km = format_float_value(end_km, 3).replace(',', '+')
+     return f'км {format_start_km} - км {format_end_km}'
+
         
 
 def return_base_context(sheet: Worksheet) -> dict:
@@ -34,6 +46,8 @@ def return_base_context(sheet: Worksheet) -> dict:
         'tip_pokr': sheet['B5'].value,
         }
         return context
+
+
 
 workbook = xl.load_workbook('Ведомость тест.xlsx', data_only=True)
 sheet_names = [i for i in workbook.sheetnames if i not in ['Лист1', 'ИД', 'В обсл', 'аб1']]
