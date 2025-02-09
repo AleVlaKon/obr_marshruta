@@ -48,10 +48,19 @@ def return_base_context(sheet: Worksheet) -> dict:
         return context
 
 
+def change_table_2(table_2):
+    ''' Редактирует таблицу 2 (замена . на , и добавление хвостовых нулей)'''
+    # {'km_nach': 45, 'km_kon': 46, 'pokr_i': 47, 'shir_i': 48, 'ball_i': 49,}
+    for row in table_2:
+        row['km_nach'] = format_float_value(row['km_nach'], 3)
+        row['km_kon'] = format_float_value(row['km_kon'], 3)
+        row['shir_i'] = format_shirina(row['shir_i'])
+        row['ball_i'] = format_float_value(row['ball_i'], 1)
+    
 
-workbook = xl.load_workbook('Ведомость тест.xlsx', data_only=True)
-sheet_names = [i for i in workbook.sheetnames if i not in ['Лист1', 'ИД', 'В обсл', 'аб1']]
-sheet_1: Worksheet = workbook['У 1']
-print(type(sheet_1['B5']))
+# workbook = xl.load_workbook('Ведомость тест.xlsx', data_only=True)
+# sheet_names = [i for i in workbook.sheetnames if i not in ['Лист1', 'ИД', 'В обсл', 'аб1']]
+# sheet_1: Worksheet = workbook['У 1']
+# print(type(sheet_1['B5']))
 
-print(return_base_context(sheet_1))
+# print(return_base_context(sheet_1))

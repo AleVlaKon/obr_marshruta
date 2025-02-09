@@ -9,9 +9,10 @@ from start_table import start_table
 from WGS_Table import wgs_table
 from some_tip import some_tips
 from osnov_vid_def import vivodi_v_otchet
+from refactor import *
 
 
-workbook = xl.load_workbook('Ведомость.xlsx', data_only=True)
+workbook = xl.load_workbook('Ведомость тест.xlsx', data_only=True)
 sheet_names = [i for i in workbook.sheetnames if i not in ['Лист1', 'ИД', 'В обсл', 'аб1']]
 # sheet_1 = workbook['10']
 
@@ -30,40 +31,17 @@ def context_table(table_cells, sheet):
 
 def change_table_2(table_2):
     ''' Редактирует таблицу 2 (замена . на , и добавление хвостовых нулей'''
-    def dob_n(x):
-        '''
-        Добавляет хвостовые нули в протяженности 
-        в зависимости от количества нулей после запятой,
-        чтобы было 0,000 формат км
-        '''
-        
-        if x.isdigit():
-            return f'{x},000'   # Если целое число, добавить 3 нуля
-        if x[-2] == ',':
-            return f'{x}00'     # Если 1 знак после запятой, добавить 2 нуля
-        elif x[-3] == ',':
-            return f'{x}0'      # Если 2 знака после запятой, добавить 1 ноль
-        else:
-            return x
-        
-    for i in table_2:
-        for k in i.keys():
-            i[k] = i[k].replace('.', ',')
-            # if len(i[k]) == 1:
-            if i[k].isdigit():
-                i[k] += ',0'
-        i['km_nach'] = dob_n(i['km_nach'])    
-        i['km_kon'] = dob_n(i['km_kon']) 
-
-    for i in table_2:
-        for k in i.keys():
-            # if 0 < len(i['shir_i']) < 3:
-            if i['shir_i'].isdigit():
-                i['shir_i'] = '{},0'.format(i['shir_i'])
+    # {'km_nach': 45, 'km_kon': 46, 'pokr_i': 47, 'shir_i': 48, 'ball_i': 49,}
+    for row in table_2:
+        row['km_nach'] = format_float_value(row['km_nach'], 3)
+        row['km_kon'] = format_float_value(row['km_kon'], 3)
+        row['shir_i'] = format_shirina(row['shir_i'])
+        row['ball_i'] = format_float_value(row['ball_i'], 1)
 
 
 def change_table_3(table_3):
     ''' Редактирует таблицу 3 (замена . на , и добавление хвостовых нулей'''
+    # {'km': 51, 'ball_i': 52, 'kpr_i': 53, }
     for i in table_3:
         for k in i.keys():
             i[k] = i[k].replace('.', ',')
@@ -75,6 +53,7 @@ def change_table_3(table_3):
 
 def change_table_4(table_4):
     ''' Редактирует таблицу 4 (замена . на , и добавление хвостовых нулей'''
+    # {'km': 56, 'kpr_i': 57, 'E_i': 58, }
     for i in table_4:
         for k in i.keys():
             i[k] = i[k].replace('.', ',')
@@ -144,22 +123,7 @@ def asphalt(sheet, sheetname, template):
     else:
         konstr_do = some_tips(sheet)
 
-    # if type(sheet['B6'].value) == int:                      
-    #     shirina = '{},0'.format(sheet['B6'].value)
-    # else:
-    #     shirina = str(sheet['B6'].value).replace('.', ',')
 
-    # if type(sheet['K2'].value) == int:                      
-    #     ball_sr = '{},0'.format(sheet['K2'].value)
-    # else:
-    #     ball_sr = str(sheet['K2'].value).replace('.', ',')
-
-    # if type(sheet['K4'].value) == int:                      #Добавляет 2 хвостовых 0, если КПР целое число
-    #     kpr_sr = '{},00'.format(sheet['K4'].value)
-    # else:
-    #     kpr_sr = str(sheet['K4'].value).replace('.', ',')
-
-    
     #Declare template variables
     context = {
         'number': sheet['B1'].value,

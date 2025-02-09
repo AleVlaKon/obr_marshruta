@@ -4,6 +4,7 @@ from refactor import return_base_context, format_shirina
 import openpyxl as xl
 from openpyxl.worksheet.worksheet import Worksheet
 from openpyxl.cell.cell import Cell
+from refactor import change_table_2
 
 
 
@@ -65,3 +66,21 @@ def test_base_context(sheet):
         }
     assert context_from_file == request_context
 
+@pytest.fixture
+def table_2():
+    context_table_2 = [
+        {'km_nach': 0.020, 'km_kon': 0.121, 'pokr_i': 'ЩПС', 'shir_i': 6.5, 'ball_i': 2,},
+        {'km_nach': 1.000, 'km_kon': 2.001, 'pokr_i': 'ЩПС', 'shir_i': "7,5х2", 'ball_i': 2.5,},
+        {'km_nach': 123.020, 'km_kon': 123.000, 'pokr_i': 'ЩПС', 'shir_i': 6, 'ball_i': 2.56,},
+    ]
+    return context_table_2
+
+def test_change_table_2(table_2):
+    result_table = [
+        {'km_nach': '0,020', 'km_kon': "0,121", 'pokr_i': 'ЩПС', 'shir_i': '6,5', 'ball_i': '2,0',},
+        {'km_nach': "1,000", 'km_kon': "2,001", 'pokr_i': 'ЩПС', 'shir_i': "7,5х2", 'ball_i': '2,5',},
+        {'km_nach': '123,020', 'km_kon': '123,000', 'pokr_i': 'ЩПС', 'shir_i': '6,0', 'ball_i': '2,6',},
+    ]
+    change_table_2(table_2)
+
+    assert table_2 == result_table
