@@ -42,13 +42,10 @@ def change_table_2(table_2):
 def change_table_3(table_3):
     ''' Редактирует таблицу 3 (замена . на , и добавление хвостовых нулей'''
     # {'km': 51, 'ball_i': 52, 'kpr_i': 53, }
-    for i in table_3:
-        for k in i.keys():
-            i[k] = i[k].replace('.', ',')
-            if len(i[k]) == 1:
-                i[k] += ',0'
-        if len(i['kpr_i']) == 3:
-            i['kpr_i'] += '0'
+    for row in table_3:
+        row['ball_i'] = format_float_value(row['ball_i'], 1)
+        row['kpr_i'] = format_float_value(row['kpr_i'], 2)
+
 
 
 def change_table_4(table_4):

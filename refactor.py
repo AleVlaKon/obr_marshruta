@@ -58,6 +58,15 @@ def change_table_2(table_2):
         row['ball_i'] = format_float_value(row['ball_i'], 1)
     
 
+def change_table_3(table_3):
+    ''' Редактирует таблицу 3 (замена . на , и добавление хвостовых нулей'''
+    # {'km': 51, 'ball_i': 52, 'kpr_i': 53, }
+    for row in table_3:
+        row['ball_i'] = format_float_value(row['ball_i'], 1)
+        row['kpr_i'] = format_float_value(row['kpr_i'], 2)
+
+
+        
 # workbook = xl.load_workbook('Ведомость тест.xlsx', data_only=True)
 # sheet_names = [i for i in workbook.sheetnames if i not in ['Лист1', 'ИД', 'В обсл', 'аб1']]
 # sheet_1: Worksheet = workbook['У 1']
