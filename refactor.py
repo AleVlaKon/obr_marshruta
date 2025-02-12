@@ -36,14 +36,15 @@ def format_km_with_plus_values(start_km: int | float, end_km: int | float) -> st
 
 def return_base_context(sheet: Worksheet) -> dict:
         context = {
-        'number': sheet['B1'].value,
-        'name': sheet['C1'].value,
+        'number': sheet['B1'].value, 
+        'name': sheet['C1'].value,   
         'opisanie': sheet['AM6'].value,
-        'shirina': sheet['B6'].value,
+        'shirina': format_shirina(sheet['B6'].value),
         'categoria': sheet['E3'].value,
         'protyazhennost': format_int_value(sheet['B4'].value, '0'),
         'prinadlezhnost': sheet['B7'].value,
         'tip_pokr': sheet['B5'].value,
+        'osn_vid_def': vivodi_v_otchet(sheet)[1],
         }
         return context
 

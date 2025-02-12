@@ -88,10 +88,6 @@ def asphalt(sheet, sheetname, template):
     table_4 = context_table(table_4_cells, sheet)
     change_table_4(table_4)
 
-    shirina = dob_nuley(sheet['B6'], '0')
-    ball_sr = dob_nuley(sheet['K2'], '0')
-    kpr_sr = dob_nuley(sheet['K4'], '00')
-    protyazhennost = dob_nuley(sheet['B4'], '0')
     
     dor_od = {
         'asf': 'Конструкция дорожной одежды нежесткая, облегченного типа с покрытием из асфальтобетона',
@@ -115,27 +111,20 @@ def asphalt(sheet, sheetname, template):
 
 
     #Declare template variables
-    context = {
-        'number': sheet['B1'].value,
-        'name': sheet['C1'].value,
-        'opisanie': sheet['AM6'].value,
-        'shirina': shirina,
-        'categoria': sheet['E3'].value,
-        'protyazhennost': protyazhennost,
-        'prinadlezhnost': sheet['B7'].value,
-        'ball_sr': ball_sr,
-        'kpr_sr': kpr_sr,
+    additional_context = {
+        'ball_sr': format_float_value(sheet['K2'], 1),
+        'kpr_sr': format_float_value(sheet['K4'], 2),
         'vyvody': sheet['AM2'].value,
         'konstr_do': konstr_do,
         'table_1': table_1,
         'table_2': table_2,
         'table_3': table_3,
         'table_4': table_4,
-        'tip_pokr': sheet['B5'].value,
-        'osn_vid_def': vivodi_v_otchet(sheet)[1],
         'vivod': vivodi_v_otchet(sheet)[0]
 
         }
+
+    context = return_base_context(sheet).update(additional_context)
 
     template.render(context)
     template.save(f'temp/{sheetname}.docx')
@@ -150,8 +139,7 @@ def PGS(sheet, sheetname):
     table_1_cells = {'km': 39, 'defect': 41}
     table_1 = context_table(table_1_cells, sheet)
 
-    shirina = dob_nuley(sheet['B6'], '0')
-
+    
     dor_od = {
         'ПГС': 'Конструкция дорожной одежды на всём протяжении – нежесткая низшего типа с песчано-гравийным покрытием',
         'плиты': 'Конструкция дорожной одежды жесткая, капитального типа с покрытием из железобетонных плит',
@@ -167,19 +155,12 @@ def PGS(sheet, sheetname):
 
 
     #Declare template variables
-    context = {
-        'number': sheet['B1'].value,
-        'name': sheet['C1'].value,
-        'opisanie': sheet['AM6'].value,
-        'shirina': shirina,
-        'categoria': sheet['E3'].value,
-        'protyazhennost': str(sheet['B4'].value).replace('.', ','),
-        'prinadlezhnost': sheet['B7'].value,
+    additional_context = {
         'table_1': table_1,
-        'tip_pokr': sheet['B5'].value,
         'konstr_do': konstr_do,
-        'osn_vid_def': vivodi_v_otchet(sheet)[1],
         }
+
+    context = return_base_context(sheet).update(additional_context)
 
     template.render(context)
     template.save(f'temp/{sheetname}.docx')
@@ -203,20 +184,24 @@ def Gruntovaya(sheet, sheetname):
     elif sheet['B5'].value in ('грунтовое улучшенное',):
         konstr_do = dor_od['gr_ul']
 
-    shirina = dob_nuley(sheet['B6'], '0')
+    
     #Declare template variables
-    context = {
-        'number': sheet['B1'].value,   #+
-        'name': sheet['C1'].value,   #+
-        'opisanie': sheet['AM6'].value,   #+
-        'shirina': shirina,
-        'protyazhennost': str(sheet['B4'].value).replace('.', ','),
-        'konstr_do': konstr_do
-        }
+    additional_context = {'konstr_do': konstr_do}
+
+    context = return_base_context(sheet).update(additional_context)
 
     template.render(context)
     template.save(f'temp/{sheetname}.docx')
     print(f'Маршрут {sheetname} сохранен')
+
+
+def zapolnenie(list_cat, zagolovok):
+    if list_cat:
+        master.add_heading(text=zagolovok, level=2)
+        for i in list_cat:
+            doc2 = docx.Document(f'temp/{i}.docx')
+            composer.append(doc2)
+            print(f'Документ{i} добавлен')
 
 
 print(sheet_names)
@@ -234,17 +219,6 @@ for i in sheet_names:
         asphalt(workbook[sheet_name], sheet_name, 'templates/Асфальт2.docx')
 
 
-# for i in sheet_names:
-#     if workbook[i]['B5'].value == 'асфальтобетон':
-#         asphalt(workbook[i], i)
-#     elif workbook[i]['B5'].value == 'ПГС':
-#         PGS(workbook[i], i)
-#     elif workbook[i]['B5'].value = 'грунтовая':
-#         Gruntovaya(workbook[i], i)
-#     else:
-#         asphalt(workbook[i], i)
-
-
 reg_list = [x for x in sheet_names if workbook[x]['B2'].value == 'региональной']
 fed_list = [x for x in sheet_names if workbook[x]['B2'].value == 'федеральной']
 mest_list = [x for x in sheet_names if workbook[x]['B2'].value == 'местной']
@@ -257,20 +231,7 @@ start_table(workbook)
 master = docx.Document(f'temp/Шаблон отчета.docx') #Объединение отчетов
 composer = Composer(master)
 list_of_docs = os.listdir(path='temp')
-# for i in list_of_docs:
-#     doc2 = docx.Document(f'temp/{i}')
-#     composer.append(doc2)
-#     composer.save('Отчет.docx')
 
-
-
-def zapolnenie(list_cat, zagolovok):
-    if list_cat:
-        master.add_heading(text=zagolovok, level=2)
-        for i in list_cat:
-            doc2 = docx.Document(f'temp/{i}.docx')
-            composer.append(doc2)
-            print(f'Документ{i} добавлен')
 
 zapolnenie(fed_list, 'Федеральные автомобильные дороги')
 zapolnenie(reg_list, 'Региональные автомобильные дороги')

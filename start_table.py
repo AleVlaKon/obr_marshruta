@@ -2,7 +2,7 @@ import openpyxl as xl
 from docxtpl import DocxTemplate
 
 
-workbook = xl.load_workbook('Ведомость.xlsx', data_only=True)
+workbook = xl.load_workbook('Ведомость тест.xlsx', data_only=True)
 # sheet = workbook['В обсл']
 
 
