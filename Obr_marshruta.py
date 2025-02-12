@@ -22,7 +22,7 @@ def context_table(table_cells, sheet):
     table = []
     for i in range(12, len(sheet['A'])):
         if sheet.cell(row=i, column=1).value not in [None, 'None']:
-            table.append({key: str(sheet.cell(i, table_cells[key]).value) for key in table_cells})
+            table.append({key: sheet.cell(i, table_cells[key]).value for key in table_cells})
     # print(table)
     return table
 
@@ -112,8 +112,8 @@ def asphalt(sheet, sheetname, template):
 
     #Declare template variables
     additional_context = {
-        'ball_sr': format_float_value(sheet['K2'], 1),
-        'kpr_sr': format_float_value(sheet['K4'], 2),
+        'ball_sr': format_float_value(sheet['K2'].value, 1),
+        'kpr_sr': format_float_value(sheet['K4'].value, 2),
         'vyvody': sheet['AM2'].value,
         'konstr_do': konstr_do,
         'table_1': table_1,
@@ -124,8 +124,9 @@ def asphalt(sheet, sheetname, template):
 
         }
 
-    context = return_base_context(sheet).update(additional_context)
-
+    context = return_base_context(sheet)
+    context.update(additional_context)
+    print(context)
     template.render(context)
     template.save(f'temp/{sheetname}.docx')
     print(f'Маршрут {sheetname} сохранен')

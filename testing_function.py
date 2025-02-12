@@ -10,7 +10,7 @@ def context_table(table_cells, sheet):
     table = []
     for i in range(12, len(sheet['A'])):
         if sheet.cell(row=i, column=1).value not in [None, 'None']:
-            table.append({key: str(sheet.cell(i, table_cells[key]).value) for key in table_cells})
+            table.append({key: sheet.cell(i, table_cells[key]).value for key in table_cells})
     # print(table)
     return table
 
@@ -19,7 +19,7 @@ table_2_cells = {'km_nach': 45, 'km_kon': 46, 'pokr_i': 47, 'shir_i': 48, 'ball_
 table_2 = context_table(table_2_cells, sheet)
 
 for i in table_2:
-    print(i)
+    print(isinstance(i['km_nach'], float))
 
 print('----------------------------------------------------')
 
