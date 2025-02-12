@@ -36,3 +36,6 @@ table_4 = context_table(table_4_cells, sheet)
 
 for i in table_4:
     print(i)
+
+
+print(workbook['У 25']['K2'].value)

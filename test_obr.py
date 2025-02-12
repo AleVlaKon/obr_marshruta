@@ -1,5 +1,5 @@
 import pytest
-from refactor import format_float_value, format_int_value, format_km_with_plus_values
+from refactor import format_float_value, format_int_value, format_km_with_plus_values, format_str_or_digit_value, return_if_error_value
 from refactor import return_base_context, format_shirina
 import openpyxl as xl
 from openpyxl.worksheet.worksheet import Worksheet
@@ -64,6 +64,7 @@ def test_base_context(sheet):
         'protyazhennost': '122,2',
         'prinadlezhnost': 'федеральная',
         'tip_pokr': 'асф. бет., цементобетон',
+        'osn_vid_def': 'Основные виды дефектов – сетка трещин.'
         }
     assert context_from_file == request_context
 
@@ -127,3 +128,11 @@ def test_change_table_4(table_4):
     change_table_4(table_4)
 
     assert table_4 == result_table
+
+
+def test_format_str_or_digit_value():
+    assert format_str_or_digit_value('#DIV/0!', 1) == '#DIV/0!'
+    assert format_str_or_digit_value(3.2, 2) == '3,20'
+    assert format_str_or_digit_value(3.2, 1) == '3,2'
+    assert format_str_or_digit_value(3, 2) == '3,00'
+    assert format_str_or_digit_value(3, 1) == '3,0'

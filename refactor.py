@@ -11,11 +11,6 @@ def format_int_value(cell_value: int | float, nuli: str) -> str:
         return f'{cell_value},{nuli}'
     else:
         return str(round(cell_value, 3)).replace('.', ',')
-    
-def format_shirina(cell_value: int | float | str) -> str:
-     if isinstance(cell_value, str):
-          return cell_value.replace('.', ',')
-     return format_int_value(cell_value, '0')
 
 
 def format_float_value(number: int | float, decimal_places: int) -> str:
@@ -25,6 +20,19 @@ def format_float_value(number: int | float, decimal_places: int) -> str:
     чтобы было 0,000 формат км
     '''
     return f"{number:,.{decimal_places}f}".replace('.', ',')
+
+
+def format_shirina(cell_value: int | float | str) -> str:
+     if isinstance(cell_value, str):
+          return cell_value.replace('.', ',')
+     return format_int_value(cell_value, '0')
+
+
+def format_str_or_digit_value(cell_value: int | float | str, decimal_places: int) -> str:
+     if isinstance(cell_value, str):
+          return cell_value.replace('.', ',')
+     return format_float_value(cell_value, decimal_places)
+
 
 
 def format_km_with_plus_values(start_km: int | float, end_km: int | float) -> str:
@@ -56,15 +64,18 @@ def change_table_2(table_2: list):
         row['km_nach'] = format_float_value(row['km_nach'], 3)
         row['km_kon'] = format_float_value(row['km_kon'], 3)
         row['shir_i'] = format_shirina(row['shir_i'])
-        row['ball_i'] = format_float_value(row['ball_i'], 1)
+        row['ball_i'] = format_str_or_digit_value(row['ball_i'], 1)
     
 
 def change_table_3(table_3: list):
     ''' Редактирует таблицу 3 (замена . на , и добавление хвостовых нулей'''
     # {'km': 51, 'ball_i': 52, 'kpr_i': 53, }
     for row in table_3:
-        row['ball_i'] = format_float_value(row['ball_i'], 1)
-        row['kpr_i'] = format_float_value(row['kpr_i'], 2)
+        row['ball_i'] = format_str_or_digit_value(row['ball_i'], 1)
+        if row['kpr_i'] == 0.5:
+            row['kpr_i'] == '-'
+        else:
+            row['kpr_i'] = format_float_value(row['kpr_i'], 2)
 
 
 def change_table_4(table_4: list):
@@ -72,10 +83,13 @@ def change_table_4(table_4: list):
     # {'km': 56, 'kpr_i': 57, 'E_i': 58, }
     for row in table_4:
         row['kpr_i'] = format_float_value(row['kpr_i'], 2)
-        if isinstance(row['E_i'], int | float):
-            row['E_i'] = f"{row['E_i']:,.0f}"
+        row['E_i'] = format_str_or_digit_value(row['E_i'], 0)
 
             
+def return_if_error_value(cell_value: int | float | str, decimal_places: int) -> str:
+     if isinstance(cell_value, str):
+          return cell_value
+     return f"{cell_value:,.{decimal_places}f}".replace('.', ',')
 
         
 # workbook = xl.load_workbook('Ведомость тест.xlsx', data_only=True)

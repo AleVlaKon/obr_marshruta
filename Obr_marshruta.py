@@ -34,15 +34,18 @@ def change_table_2(table_2: list):
         row['km_nach'] = format_float_value(row['km_nach'], 3)
         row['km_kon'] = format_float_value(row['km_kon'], 3)
         row['shir_i'] = format_shirina(row['shir_i'])
-        row['ball_i'] = format_float_value(row['ball_i'], 1)
+        row['ball_i'] = format_str_or_digit_value(row['ball_i'], 1)
 
 
 def change_table_3(table_3: list):
     ''' Редактирует таблицу 3 (замена . на , и добавление хвостовых нулей'''
     # {'km': 51, 'ball_i': 52, 'kpr_i': 53, }
     for row in table_3:
-        row['ball_i'] = format_float_value(row['ball_i'], 1)
-        row['kpr_i'] = format_float_value(row['kpr_i'], 2)
+        row['ball_i'] = format_str_or_digit_value(row['ball_i'], 1)
+        if row['kpr_i'] == 0.5:
+            row['kpr_i'] == '-'
+        else:
+            row['kpr_i'] = format_float_value(row['kpr_i'], 2)
 
 
 def change_table_4(table_4: list):
@@ -50,8 +53,8 @@ def change_table_4(table_4: list):
     # {'km': 56, 'kpr_i': 57, 'E_i': 58, }
     for row in table_4:
         row['kpr_i'] = format_float_value(row['kpr_i'], 2)
-        if isinstance(row['E_i'], int | float):
-            row['E_i'] = f"{row['E_i']:,.0f}"
+        row['E_i'] = format_str_or_digit_value(row['E_i'], 0)
+
     
 
 def dob_nuley(cell, nuli):
@@ -112,8 +115,8 @@ def asphalt(sheet, sheetname, template):
 
     #Declare template variables
     additional_context = {
-        'ball_sr': format_float_value(sheet['K2'].value, 1),
-        'kpr_sr': format_float_value(sheet['K4'].value, 2),
+        'ball_sr': format_str_or_digit_value(sheet['K2'].value, 1),
+        'kpr_sr': format_str_or_digit_value(sheet['K4'].value, 2),
         'vyvody': sheet['AM2'].value,
         'konstr_do': konstr_do,
         'table_1': table_1,
@@ -161,7 +164,8 @@ def PGS(sheet, sheetname):
         'konstr_do': konstr_do,
         }
 
-    context = return_base_context(sheet).update(additional_context)
+    context = return_base_context(sheet)
+    context.update(additional_context)
 
     template.render(context)
     template.save(f'temp/{sheetname}.docx')
@@ -189,7 +193,8 @@ def Gruntovaya(sheet, sheetname):
     #Declare template variables
     additional_context = {'konstr_do': konstr_do}
 
-    context = return_base_context(sheet).update(additional_context)
+    context = return_base_context(sheet)
+    context.update(additional_context)
 
     template.render(context)
     template.save(f'temp/{sheetname}.docx')
