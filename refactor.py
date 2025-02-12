@@ -48,7 +48,7 @@ def return_base_context(sheet: Worksheet) -> dict:
         return context
 
 
-def change_table_2(table_2):
+def change_table_2(table_2: list):
     ''' Редактирует таблицу 2 (замена . на , и добавление хвостовых нулей)'''
     # {'km_nach': 45, 'km_kon': 46, 'pokr_i': 47, 'shir_i': 48, 'ball_i': 49,}
     for row in table_2:
@@ -58,13 +58,23 @@ def change_table_2(table_2):
         row['ball_i'] = format_float_value(row['ball_i'], 1)
     
 
-def change_table_3(table_3):
+def change_table_3(table_3: list):
     ''' Редактирует таблицу 3 (замена . на , и добавление хвостовых нулей'''
     # {'km': 51, 'ball_i': 52, 'kpr_i': 53, }
     for row in table_3:
         row['ball_i'] = format_float_value(row['ball_i'], 1)
         row['kpr_i'] = format_float_value(row['kpr_i'], 2)
 
+
+def change_table_4(table_4: list):
+    ''' Редактирует таблицу 4 (замена . на , и добавление хвостовых нулей'''
+    # {'km': 56, 'kpr_i': 57, 'E_i': 58, }
+    for row in table_4:
+        row['kpr_i'] = format_float_value(row['kpr_i'], 2)
+        if isinstance(row['E_i'], int | float):
+            row['E_i'] = f"{row['E_i']:,.0f}"
+
+            
 
         
 # workbook = xl.load_workbook('Ведомость тест.xlsx', data_only=True)

@@ -4,7 +4,7 @@ from refactor import return_base_context, format_shirina
 import openpyxl as xl
 from openpyxl.worksheet.worksheet import Worksheet
 from openpyxl.cell.cell import Cell
-from refactor import change_table_2, change_table_3
+from refactor import change_table_2, change_table_3, change_table_4
 
 
 
@@ -106,3 +106,24 @@ def test_change_table_3(table_3):
     change_table_3(table_3)
 
     assert table_3 == result_table
+
+
+#test table_4
+@pytest.fixture
+def table_4():
+    context_table_4 = [
+        {'km': 'км 1+000 км 2+000', 'kpr_i': 1, 'E_i': 132},
+        {'km': 'км 2+000 км 2+350', 'kpr_i': 0.8, 'E_i': 132.4},
+        {'km': 'км 2+350 км 3+000', 'kpr_i': 0.8333333333, 'E_i': '#ЗНАЧ'},
+    ]   
+    return context_table_4
+
+def test_change_table_4(table_4):
+    result_table = [
+        {'km': 'км 1+000 км 2+000', 'kpr_i': '1,00', 'E_i': '132'},
+        {'km': 'км 2+000 км 2+350', 'kpr_i': '0,80', 'E_i': '132'},
+        {'km': 'км 2+350 км 3+000', 'kpr_i': '0,83', 'E_i': '#ЗНАЧ'},
+    ]
+    change_table_4(table_4)
+
+    assert table_4 == result_table
