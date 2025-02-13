@@ -9,7 +9,7 @@ from start_table import start_table
 from WGS_Table import wgs_table
 from some_tip import some_tips
 from osnov_vid_def import vivodi_v_otchet
-from refactor import *
+from services import *
 
 
 workbook = xl.load_workbook('Ведомость тест.xlsx', data_only=True)
@@ -25,43 +25,6 @@ def context_table(table_cells, sheet):
             table.append({key: sheet.cell(i, table_cells[key]).value for key in table_cells})
     # print(table)
     return table
-
-
-def change_table_2(table_2: list):
-    ''' Редактирует таблицу 2 (замена . на , и добавление хвостовых нулей'''
-    # {'km_nach': 45, 'km_kon': 46, 'pokr_i': 47, 'shir_i': 48, 'ball_i': 49,}
-    for row in table_2:
-        row['km_nach'] = format_float_value(row['km_nach'], 3)
-        row['km_kon'] = format_float_value(row['km_kon'], 3)
-        row['shir_i'] = format_shirina(row['shir_i'])
-        row['ball_i'] = format_str_or_digit_value(row['ball_i'], 1)
-
-
-def change_table_3(table_3: list):
-    ''' Редактирует таблицу 3 (замена . на , и добавление хвостовых нулей'''
-    # {'km': 51, 'ball_i': 52, 'kpr_i': 53, }
-    for row in table_3:
-        row['ball_i'] = format_str_or_digit_value(row['ball_i'], 1)
-        if row['kpr_i'] == 0.5:
-            row['kpr_i'] == '-'
-        else:
-            row['kpr_i'] = format_float_value(row['kpr_i'], 2)
-
-
-def change_table_4(table_4: list):
-    ''' Редактирует таблицу 4 (замена . на , и добавление хвостовых нулей'''
-    # {'km': 56, 'kpr_i': 57, 'E_i': 58, }
-    for row in table_4:
-        row['kpr_i'] = format_float_value(row['kpr_i'], 2)
-        row['E_i'] = format_str_or_digit_value(row['E_i'], 0)
-
-    
-
-def dob_nuley(cell, nuli):
-    if type(cell.value) == int:                      #Добавляет nuli, если cell целое число
-        return '{},{}'.format(cell.value, nuli)
-    else:
-        return str(cell.value).replace('.', ',')
 
 
 def asphalt(sheet, sheetname, template):

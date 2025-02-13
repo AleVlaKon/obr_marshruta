@@ -1,6 +1,9 @@
 import openpyxl as xl
 from docxtpl import DocxTemplate
 
+from services import format_int_value, convert_str_to_float
+
+
 
 workbook = xl.load_workbook('Ведомость тест.xlsx', data_only=True)
 # sheet = workbook['В обсл']
@@ -38,14 +41,16 @@ def start_table(workbook):
     summas = {'федеральная': 0, 'региональная': 0, 'местная': 0, 'частная': 0, 'лесная': 0, 'ведомственная': 0, }
     for i in range(2, len(sheet['A'])):
         if sheet.cell(row=i, column=8).value in summas:
-            summas[sheet.cell(row=i, column=8).value] += if_str(sheet.cell(row=i, column=6).value)
-    sum_all = round(sum(summas.values()), 3)     # Протяженность всех дорог
-    sum_all = add_null(str(sum_all))             # Протяженность всех дорог (строка)
-
+            # summas[sheet.cell(row=i, column=8).value] += if_str(sheet.cell(row=i, column=6).value)
+            summas[sheet.cell(row=i, column=8).value] += convert_str_to_float(sheet.cell(row=i, column=6).value)
+    # sum_all = round(sum(summas.values()), 3)     # Протяженность всех дорог
+    # sum_all = add_null(str(sum_all))             # Протяженность всех дорог (строка)
+    sum_all = format_int_value(sum(summas.values()))
 
     for k in summas.keys():
-        summas[k] = str(round(summas[k], 3))
-        summas[k] = add_null(summas[k])
+        # summas[k] = str(round(summas[k], 3))
+        # summas[k] = add_null(summas[k])
+        summas[k] = format_int_value(summas[k])
 
 
     def context_table(znachenie, sheet, table_cells):

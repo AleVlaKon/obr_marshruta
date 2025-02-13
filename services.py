@@ -1,11 +1,8 @@
-import pytest
-import openpyxl as xl
 from openpyxl.worksheet.worksheet import Worksheet
-from openpyxl.cell.cell import Cell
 from osnov_vid_def import vivodi_v_otchet
 
 
-def format_int_value(cell_value: int | float, nuli: str) -> str:
+def format_int_value(cell_value: int | float, nuli: str='0') -> str:
     #Добавляет nuli, если cell целое число
     if isinstance(cell_value, int):                      
         return f'{cell_value},{nuli}'
@@ -22,10 +19,11 @@ def format_float_value(number: int | float, decimal_places: int) -> str:
     return f"{number:,.{decimal_places}f}".replace('.', ',')
 
 
-def format_shirina(cell_value: int | float | str) -> str:
-     if isinstance(cell_value, str):
-          return cell_value.replace('.', ',')
-     return format_int_value(cell_value, '0')
+def convert_str_to_float(value: str | float | int) -> float | int:
+    '''Если в ячейке сохранена строка, переводит ее в число'''
+    if isinstance(value, str):
+        return float(value.replace(',', '.'))
+    return value
 
 
 def format_str_or_digit_value(cell_value: int | float | str, decimal_places: int) -> str:
@@ -34,20 +32,18 @@ def format_str_or_digit_value(cell_value: int | float | str, decimal_places: int
      return format_float_value(cell_value, decimal_places)
 
 
-
 def format_km_with_plus_values(start_km: int | float, end_km: int | float) -> str:
      format_start_km = format_float_value(start_km, 3).replace(',', '+')
      format_end_km = format_float_value(end_km, 3).replace(',', '+')
      return f'км {format_start_km} - км {format_end_km}'
 
         
-
 def return_base_context(sheet: Worksheet) -> dict:
         context = {
         'number': sheet['B1'].value, 
         'name': sheet['C1'].value,   
         'opisanie': sheet['AM6'].value,
-        'shirina': format_shirina(sheet['B6'].value),
+        'shirina': format_str_or_digit_value(sheet['B6'].value, 1),
         'categoria': sheet['E3'].value,
         'protyazhennost': format_int_value(sheet['B4'].value, '0'),
         'prinadlezhnost': sheet['B7'].value,
@@ -63,7 +59,7 @@ def change_table_2(table_2: list):
     for row in table_2:
         row['km_nach'] = format_float_value(row['km_nach'], 3)
         row['km_kon'] = format_float_value(row['km_kon'], 3)
-        row['shir_i'] = format_shirina(row['shir_i'])
+        row['shir_i'] = format_str_or_digit_value(row['shir_i'], 1)
         row['ball_i'] = format_str_or_digit_value(row['ball_i'], 1)
     
 
