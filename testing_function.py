@@ -1,5 +1,7 @@
 import openpyxl as xl
 
+from services import format_int_value, format_str_or_digit_value
+
 workbook = xl.load_workbook('Ведомость тест.xlsx', data_only=True)
 sheet_names = [i for i in workbook.sheetnames if i not in ['Лист1', 'ИД', 'В обсл', 'аб1']]
 sheet = workbook['У 1']
@@ -40,7 +42,7 @@ for i in table_4:
 
 print(workbook['У 25']['K2'].value)
 
-table_cells_fed = {'num_f': 1, 'nazvanie_f': 2, 'cat_f': 3, 'pokr_f': 4, 'nagr_f': 5, 'protyazh_f': 6, 'prinad_f': 7, }
+table_cells_fed = {'num': 1, 'nazvanie': 2, 'cat': 3, 'pokr': 4, 'nagr': 5, 'protyazh': 6, 'prinad': 7, }
 
 def context_start_table(znachenie, sheet, table_cells):
     table = []
@@ -51,8 +53,18 @@ def context_start_table(znachenie, sheet, table_cells):
 
 table_fed = context_start_table('федеральная', workbook['В обсл'], table_cells_fed)
 
+def change_table_0(table):
+    for row in table:
+        row['nagr'] = format_str_or_digit_value(row['nagr'], 1)
+        row['protyazh'] = format_int_value(row['protyazh'])
+        
+
 for i in table_fed:
     print(i)
 
+change_table_0(table_fed)
+
+for i in table_fed:
+    print(i)
 
 
