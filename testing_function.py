@@ -40,4 +40,19 @@ for i in table_4:
 
 print(workbook['У 25']['K2'].value)
 
+table_cells_fed = {'num_f': 1, 'nazvanie_f': 2, 'cat_f': 3, 'pokr_f': 4, 'nagr_f': 5, 'protyazh_f': 6, 'prinad_f': 7, }
+
+def context_start_table(znachenie, sheet, table_cells):
+    table = []
+    for i in range(2, len(sheet['A'])):
+        if sheet.cell(row=i, column=8).value == znachenie:
+            table.append({key: sheet.cell(i, table_cells[key]).value for key in table_cells})
+    return table
+
+table_fed = context_start_table('федеральная', workbook['В обсл'], table_cells_fed)
+
+for i in table_fed:
+    print(i)
+
+
 

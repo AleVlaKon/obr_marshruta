@@ -53,6 +53,12 @@ def return_base_context(sheet: Worksheet) -> dict:
         return context
 
 
+def change_table_0(table: list) -> None:
+    for road in table:
+        pass
+
+
+
 def change_table_2(table_2: list):
     ''' Редактирует таблицу 2 (замена . на , и добавление хвостовых нулей)'''
     # {'km_nach': 45, 'km_kon': 46, 'pokr_i': 47, 'shir_i': 48, 'ball_i': 49,}
