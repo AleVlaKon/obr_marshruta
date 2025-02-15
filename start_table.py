@@ -61,7 +61,7 @@ def start_table(workbook):
         table = []
         for i in range(2, len(sheet['A'])):
             if sheet.cell(row=i, column=8).value == znachenie:
-                table.append({key: str(sheet.cell(i, table_cells[key]).value) for key in table_cells})
+                table.append({key: sheet.cell(i, table_cells[key]).value for key in table_cells})
         # print(table)
         return table
 
@@ -116,7 +116,7 @@ def start_table(workbook):
             }
 
 
-    template = DocxTemplate('templates/Шаблон общий.docx')
+    template = DocxTemplate('templates/Шаблон общий 2.docx')
     template.render(context)
     template.save(f'temp/Шаблон отчета.docx')
 
