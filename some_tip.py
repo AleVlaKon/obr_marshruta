@@ -1,4 +1,5 @@
 import openpyxl as xl
+from services import *
 
 
 
@@ -9,7 +10,8 @@ import openpyxl as xl
 
 def some_tips(sheet_1):
 
-    def corr_shir(sheet_1, i):         # Если ширина вида 11,5х2 переводит ее в число 
+    def corr_shir(sheet_1, i):         
+        # Если ширина вида 11,5х2 переводит ее в число 
         if type(sheet_1.cell(row = i, column=4).value) in (int, float):
             return round(sheet_1.cell(row = i, column=4).value, 1)
         else:
@@ -47,10 +49,11 @@ def some_tips(sheet_1):
 
     def corr_dict(pokritia):
         for key in pokritia:
-            if type(pokritia[key]) is int:
-                pokritia[key] = f'{pokritia[key]},0'
-            else:
-                pokritia[key] = str(pokritia[key]).replace('.', ',')
+            pokritia[key] = format_int_value(pokritia[key])
+            # if type(pokritia[key]) is int:
+            #     pokritia[key] = f'{pokritia[key]},0'
+            # else:
+            #     pokritia[key] = str(pokritia[key]).replace('.', ',')
 
     corr_dict(pokritia_prot)
     corr_dict(shirina_min)
