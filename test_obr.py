@@ -1,10 +1,10 @@
 import pytest
-from refactor import format_float_value, format_int_value, format_km_with_plus_values
-from refactor import return_base_context, format_shirina
+from services import format_float_value, format_int_value, format_km_with_plus_values, format_str_or_digit_value, return_if_error_value
+from services import return_base_context
 import openpyxl as xl
 from openpyxl.worksheet.worksheet import Worksheet
 from openpyxl.cell.cell import Cell
-from refactor import change_table_2, change_table_3, change_table_4
+from services import change_table_2, change_table_3, change_table_4, convert_str_to_float
 
 
 
@@ -13,6 +13,8 @@ def test_format_int_value():
     assert format_int_value(1.256, '00') == '1,256'
     assert format_int_value(1, '0') == '1,0'
     assert format_int_value(1.25678532, '00') == '1,257'
+    assert format_int_value(257.25678532) == '257,257'
+    assert format_int_value(200) == '200,0'
 
 
 def test_format_float_value():
@@ -35,12 +37,20 @@ def test_format_km_with_plus_values():
     assert format_km_with_plus_values(1.256, 3.053) == 'км 1+256 - км 3+053'
     assert format_km_with_plus_values(0, 0) == 'км 0+000 - км 0+000'
 
+def test_format_str_or_digit_value():
+    assert format_str_or_digit_value('#DIV/0!', 1) == '#DIV/0!'
+    assert format_str_or_digit_value(3.2, 2) == '3,20'
+    assert format_str_or_digit_value(3.2, 1) == '3,2'
+    assert format_str_or_digit_value(3, 2) == '3,00'
+    assert format_str_or_digit_value(3, 1) == '3,0'
 
-def test_format_shirina():
-    assert format_shirina(1) == '1,0'
-    assert format_shirina(7.54) == '7,54'
-    assert format_shirina(7.5) == '7,5'
-    assert format_shirina('7.5-15.0') == '7,5-15,0'
+
+
+def test_convert_str_to_float():
+    assert convert_str_to_float('2,5') == 2.5
+    assert convert_str_to_float('1') == 1
+    assert convert_str_to_float(1) == 1
+    assert convert_str_to_float(2.5) == 2.5    
 
 
 @pytest.fixture
@@ -64,7 +74,7 @@ def test_base_context(sheet):
         'protyazhennost': '122,2',
         'prinadlezhnost': 'федеральная',
         'tip_pokr': 'асф. бет., цементобетон',
-        'osn_vid_def': 'Основные виды дефектов – сетка трещин.',
+        'osn_vid_def': 'Основные виды дефектов – сетка трещин.'
         }
     assert context_from_file == request_context
 
