@@ -64,6 +64,7 @@ def test_base_context(sheet):
         'protyazhennost': '122,2',
         'prinadlezhnost': 'федеральная',
         'tip_pokr': 'асф. бет., цементобетон',
+        'osn_vid_def': 'Основные виды дефектов – сетка трещин.',
         }
     assert context_from_file == request_context
 
