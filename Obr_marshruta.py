@@ -86,8 +86,7 @@ def asphalt(sheet, sheetname, template):
         'table_2': table_2,
         'table_3': table_3,
         'table_4': table_4,
-        'vivod': vivodi_v_otchet(sheet)[0]
-
+        'vivod': vivodi_v_otchet(sheet)[0],
         }
 
     context = return_base_context(sheet)
