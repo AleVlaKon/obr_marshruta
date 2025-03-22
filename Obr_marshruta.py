@@ -163,7 +163,7 @@ def Gruntovaya(sheet, sheetname):
     print(f'Маршрут {sheetname} сохранен')
 
 
-def zapolnenie(list_cat, zagolovok):
+def zapolnenie(list_cat, zagolovok, master, composer):
     if list_cat:
         master.add_heading(text=zagolovok, level=2)
         for i in list_cat:
@@ -172,45 +172,52 @@ def zapolnenie(list_cat, zagolovok):
             print(f'Документ{i} добавлен')
 
 
-print(sheet_names)
+def main(workbook, sheet_names):
+    print(sheet_names)
 
-for i in sheet_names:
-    sheet_name = i
-    if workbook[sheet_name]['B5'].value.lower() in ('асфальтобетон', 'асф. бет.', 'асфальтобетонное',
-                                            'асф.бет.', 'щебеночное', 'щебень', 'гравийное', 'гравий'):
-        asphalt(workbook[sheet_name], sheet_name, 'templates/Асфальт.docx')
-    elif workbook[sheet_name]['B5'].value.lower() in ('пгс', 'плиты', 'цементобетон', 'цементобетонное', 'бетонное'):
-        PGS(workbook[sheet_name], sheet_name)
-    elif workbook[sheet_name]['B5'].value.lower() in ('грунтовая', 'грунтощебень', 'грунт', 'грунтовое', 'грунтовое улучшенное'):
-        Gruntovaya(workbook[sheet_name], sheet_name)
-    else:
-        asphalt(workbook[sheet_name], sheet_name, 'templates/Асфальт2.docx')
-
-
-reg_list = [x for x in sheet_names if workbook[x]['B2'].value == 'региональной']
-fed_list = [x for x in sheet_names if workbook[x]['B2'].value == 'федеральной']
-mest_list = [x for x in sheet_names if workbook[x]['B2'].value == 'местной']
-chastnie_list = [x for x in sheet_names if workbook[x]['B2'].value == 'частной']
-lesn_list = [x for x in sheet_names if workbook[x]['B2'].value == 'лесной']
-vedom_list = [x for x in sheet_names if workbook[x]['B2'].value == 'ведомственной']
-
-start_table(workbook)
-
-master = docx.Document(f'temp/Шаблон отчета.docx') #Объединение отчетов
-composer = Composer(master)
-list_of_docs = os.listdir(path='temp')
+    for i in sheet_names:
+        sheet_name = i
+        if workbook[sheet_name]['B5'].value.lower() in ('асфальтобетон', 'асф. бет.', 'асфальтобетонное',
+                                                'асф.бет.', 'щебеночное', 'щебень', 'гравийное', 'гравий'):
+            asphalt(workbook[sheet_name], sheet_name, 'templates/Асфальт.docx')
+        elif workbook[sheet_name]['B5'].value.lower() in ('пгс', 'плиты', 'цементобетон', 'цементобетонное', 'бетонное'):
+            PGS(workbook[sheet_name], sheet_name)
+        elif workbook[sheet_name]['B5'].value.lower() in ('грунтовая', 'грунтощебень', 'грунт', 'грунтовое', 'грунтовое улучшенное'):
+            Gruntovaya(workbook[sheet_name], sheet_name)
+        else:
+            asphalt(workbook[sheet_name], sheet_name, 'templates/Асфальт2.docx')
 
 
-zapolnenie(fed_list, 'Федеральные автомобильные дороги')
-zapolnenie(reg_list, 'Региональные автомобильные дороги')
-zapolnenie(mest_list, 'Местные автомобильные дороги')
-zapolnenie(chastnie_list, 'Частные автомобильные дороги')
-zapolnenie(lesn_list, 'Лесные автомобильные дороги')
-zapolnenie(vedom_list, 'Ведомственные автомобильные дороги')
+    reg_list = [x for x in sheet_names if workbook[x]['B2'].value == 'региональной']
+    fed_list = [x for x in sheet_names if workbook[x]['B2'].value == 'федеральной']
+    mest_list = [x for x in sheet_names if workbook[x]['B2'].value == 'местной']
+    chastnie_list = [x for x in sheet_names if workbook[x]['B2'].value == 'частной']
+    lesn_list = [x for x in sheet_names if workbook[x]['B2'].value == 'лесной']
+    vedom_list = [x for x in sheet_names if workbook[x]['B2'].value == 'ведомственной']
 
-composer.save('Отчет.docx')
-wgs_table(workbook)
+    start_table(workbook)
+
+    master = docx.Document(f'temp/Шаблон отчета.docx') #Объединение отчетов
+    composer = Composer(master)
+    list_of_docs = os.listdir(path='temp')
 
 
-for file in os.listdir(path='temp'):
-    os.remove(f'temp/{file}')
+    zapolnenie(fed_list, 'Федеральные автомобильные дороги', master, composer)
+    zapolnenie(reg_list, 'Региональные автомобильные дороги', master, composer)
+    zapolnenie(mest_list, 'Местные автомобильные дороги', master, composer)
+    zapolnenie(chastnie_list, 'Частные автомобильные дороги', master, composer)
+    zapolnenie(lesn_list, 'Лесные автомобильные дороги', master, composer)
+    zapolnenie(vedom_list, 'Ведомственные автомобильные дороги', master, composer)
+
+    composer.save('Отчет.docx')
+    wgs_table(workbook)
+
+
+    for file in os.listdir(path='temp'):
+        os.remove(f'temp/{file}')
+
+
+if __name__ == '__main__':
+    workbook = xl.load_workbook('Ведомость тест.xlsx', data_only=True)
+    sheet_names = [i for i in workbook.sheetnames if i not in ['Лист1', 'ИД', 'В обсл', 'аб1']]
+    main(workbook, sheet_names)
