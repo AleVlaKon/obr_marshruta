@@ -5,7 +5,7 @@ from services import format_int_value, convert_str_to_float, format_str_or_digit
 
 
 
-workbook = xl.load_workbook('Ведомость тест.xlsx', data_only=True)
+workbook = xl.load_workbook('Ведомость.xlsx', data_only=True)
 # sheet = workbook['В обсл']
 
 

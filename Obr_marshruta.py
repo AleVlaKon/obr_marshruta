@@ -12,7 +12,7 @@ from osnov_vid_def import vivodi_v_otchet
 from services import *
 
 
-workbook = xl.load_workbook('Ведомость тест.xlsx', data_only=True)
+workbook = xl.load_workbook('Ведомость.xlsx', data_only=True)
 sheet_names = [i for i in workbook.sheetnames if i not in ['Лист1', 'ИД', 'В обсл', 'аб1']]
 # sheet_1 = workbook['10']
 
@@ -92,7 +92,6 @@ def asphalt(sheet, sheetname, template):
 
     context = return_base_context(sheet)
     context.update(additional_context)
-    print(context)
     template.render(context)
     template.save(f'temp/{sheetname}.docx')
     print(f'Маршрут {sheetname} сохранен')
